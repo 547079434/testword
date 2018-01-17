@@ -1,61 +1,31 @@
-{% load staticfiles %}
-<!doctype html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>测字</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
-    <script type="text/javascript" src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
-    <style type="text/css">
-        .main{
-            margin-top: 100px;
-            padding: 0 20px;
-        }
-        .main span{
-            font-size: 80px;
-            display: block;
-            width: 100%;
-            text-align: center;
-        }
-        .main button{
-            width: 80px;
-            height: 50px;
-            background: #2d99e5;
-            margin:50px 20px 0 20px;
-            border: none;
-            color: #fff;
-            cursor: pointer;
-            font-size: 26px;
-        }
-        .center_div {
-            width: 100%;
-            text-align: center;
-        }
-        .right_div {
-            width: 100%;
-            margin-top:20px;
-            text-align: right;
-        }
-    </style>
-</head>
-<body>
-    <div class="main">
-        <h1>请仔细阅读下列文字，会请按会，不会请按不会</h1>
-        <span>蠢</span>
-        <div class="center_div"><button id="know">会</button><button id="unknow">不会</button></div>
-        <div class="right_div"><a href="javascript:void(0);">>>>下一题</a></div>
-    </div>
-</body>
-<script type="text/javascript">
-    $('#know').click(function(){
-        alert('会你麻痹，你大声念给我听听？')
-    })
+{% extends "base/base.html" %}
 
-    $('#unknow').click(function(){
-        alert('蠢你都不会，你是不是撒币？')
-    })
-    $('.right_div a').click(function(){
-        alert('一句话需求，原型图不画，设计稿不给，经费不足，还想要下一题？')
+{% block extralmedias %}
+<title>测试人信息</title>
+{% endblock %}
+
+{% block content %}
+<div class="main">
+    <form>
+        <div class="center_div"><label>姓名：</label><input type="text" name="name" /></div>
+        <div class="center_div"><label>电话：</label><input type="text" name="phone" /></div>
+        <div class="center_div"><button id="submit" onClick="return false;">去闯关</button></div>
+    </form>
+
+</div>
+<script type="text/javascript">
+    $('#submit').click(function(){
+        var name = $('input[name="name"]').val();
+        var phone = $('input[name="phone"]').val();
+        if(name){
+            if(phone){
+                window.location.href = '/words/?name='+name+'&phone='+phone
+            }else{
+                alert('请输入联系电话');
+            }
+        }else{
+            alert('请输入姓名');
+        }
     })
 </script>
-</html>
+{% endblock %}

@@ -16,11 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.views.static import serve
-from .settings import STATIC_ROOT
+from .settings import STATIC_ROOT,MEDIAS_ROOT
 from .views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('' , IndexView.as_view(), name='index'),
+    path('words/' , WordsView.as_view(), name='words'),
     path('static/', serve, {'document_root':STATIC_ROOT}),
+    path('medias/', serve, {'document_root':MEDIAS_ROOT}),
 ]

@@ -1,0 +1,46 @@
+{% extends "base/base.html" %}
+
+{% block extralmedias %}
+<title>测字闯关</title>
+{% endblock %}
+
+{% block content %}
+<div class="main">
+    <h2>请仔细阅读下列文字，认识的请打勾</h2>
+    <div class="center_div">
+        <ul class="word_list">
+            {% for item in words %}
+            <li><span>{{item}}</span><input type="checkbox" name="words" class="check"></li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="right_div"><button id="next">下一关</button></div>
+</div>
+
+<script type="text/javascript">
+    var name = '{{name}}';
+    var phone = '{{phone}}';
+    var checknum = {{checknum}};
+    var page = {{page}}+1;
+    var num = {{num}};
+    $('#next').click(function(){
+        if(num==page-1){
+            $.ajax({
+                url:'',
+                type:'POST',
+                data:{'name':name,'phone':phone,'checknum':checknum},
+                success:function(msg){
+                    $('.main').html('最后得分：'+msg);
+                }
+            })
+        }else{
+            $('.check').each(function(){
+                if($(this).is(':checked')){
+                    checknum += 1;
+                }
+            })
+            window.location.href = '?name='+name+'&phone='+phone+'&page='+page+'&checknum='+checknum;
+        }
+    })
+</script>
+{% endblock %}
