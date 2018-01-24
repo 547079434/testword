@@ -1,0 +1,18 @@
+{% extends "base/base.html" %}
+
+{% block extralmedias %}
+<title>测字闯关</title>
+<style type="text/css">
+    body{
+        background: url('../static/images/end.jpg') no-repeat;
+        background-size: 100% 100%;
+
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="main">
+    <span class="end_points">最终得分：{{points}}</span>
+</div>
+{% endblock %}

@@ -3,16 +3,17 @@ html,body{
     height: 100%;
     margin:0;
     padding: 0;
+    overflow: hidden;
 }
 .main{
-    margin-top: 100px;
+    margin-top: 70px;
     padding: 0 20px;
 }
 .main form{
-    padding-top: 100px;
+    padding-top: 170px;
 }
 .main form label{
-    margin-left: 5px;
+    /*margin-left: 5px;*/
 }
 #submit{
     width: 70%;
@@ -44,6 +45,18 @@ ul{
     float: left;
     font-size: 30px;
 }
+.word_list li div{
+    background: url(../images/blue_rect.png);
+    background-size: 100% 100%;
+    width: 85px;
+    height: 85px;
+    margin: 0 auto;
+    line-height: 85px;
+}
+.word_list li:nth-child(2n) div{
+    background: url(../images/yellow_rect.png);
+    background-size: 100% 100%;
+}
 .check {
     width: 25px;
     height: 25px;
@@ -61,6 +74,7 @@ ul{
     background: none;
     border: none;
     color: #fff;
+    width: 60%;
 }
 .split{
     margin:0 10px;
@@ -139,4 +153,20 @@ ul{
     width: 150px;
     height: 50px;
     margin: 0 auto;
+}
+.yes{
+    color: green;
+}
+.no{
+    color: red;
+}
+.end_points{
+    position: absolute;
+    top: 50%;
+    left: 0;
+    color: yellow;
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
 }

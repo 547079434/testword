@@ -19,7 +19,7 @@
     <div class="center_div">
         <ul class="word_list">
             {% for item in words %}
-            <li><span>{{item}}</span><input type="checkbox" name="words" class="check"></li>
+            <li><div><span id="word_{{forloop.counter|add:-1}}" style="display: none;">{{item}}</span></div></li>
             {% endfor %}
         </ul>
     </div>
@@ -32,19 +32,15 @@
     var checknum = {{checknum}};
     var page = {{page}}+1;
     var num = {{num}};
+    var words = {{words|safe}};
+    var i = 0;
+    $('#word_0').show(1000);
     $('#next').click(function(){
         if(num==page-1){
-            $.ajax({
-                url:'',
-                type:'POST',
-                data:{'name':name,'phone':phone,'checknum':checknum},
-                success:function(msg){
-                    $('.main').html('最后得分：'+msg);
-                }
-            })
+            window.location.href = '/end/?name='+name+'&phone='+phone+'&checknum='+checknum;
         }else{
-            $('.check').each(function(){
-                if($(this).is(':checked')){
+            $('.word_list span').each(function(){
+                if($(this).hasClass('yes')){
                     checknum += 1;
                 }
             })
@@ -53,6 +49,24 @@
     })
     $('#back').click(function(){
         history.back();
+    })
+    $('#yes').click(function(){
+        if(i<words.length-1){
+            $('#word_'+i).addClass('yes');
+            i++;
+            $('#word_'+i).show(1000);
+        }else{
+            $('#next').trigger('click');
+        }
+    })
+    $('#no').click(function(){
+        if(i<words.length-1){
+            $('#word_'+i).addClass('no');
+            i++;
+            $('#word_'+i).show(1000);
+        }else{
+            $('#next').trigger('click');
+        }
     })
 </script>
 {% endblock %}
