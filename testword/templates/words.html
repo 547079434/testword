@@ -4,9 +4,8 @@
 <title>测字闯关</title>
 <style type="text/css">
     body{
-        background: url('../static/images/bg1.png') no-repeat;
+        background: url('../static/images/bg{{passnum}}.png') no-repeat;
         background-size: 100% 100%;
-
     }
 </style>
 {% endblock %}
@@ -15,6 +14,7 @@
 <div class="main">
     <div class="header"><button id="back"></button><button id="next"></button></div>
     <div class="title"></div>
+    <div class="head_div"><div class="head{{passnum}}"></div></div>
     <div class="logo_div"><div class="logo"></div></div>
     <div class="center_div">
         <ul class="word_list">
@@ -27,8 +27,7 @@
 </div>
 
 <script type="text/javascript">
-    var name = '{{name}}';
-    var phone = '{{phone}}';
+    var passnum = {{passnum}};
     var checknum = {{checknum}};
     var page = {{page}}+1;
     var num = {{num}};
@@ -37,14 +36,19 @@
     $('#word_0').show(1000);
     $('#next').click(function(){
         if(num==page-1){
-            window.location.href = '/end/?name='+name+'&phone='+phone+'&checknum='+checknum;
+            if(passnum<4){
+                passnum += 1;
+                window.location.href = '?name={{name}}&phone={{phone}}&page=1&checknum='+checknum+'&passnum='+passnum;
+            }else{
+                window.location.href = '/end/?name={{name}}&phone={{phone}}&checknum='+checknum;
+            }
         }else{
             $('.word_list span').each(function(){
                 if($(this).hasClass('yes')){
                     checknum += 1;
                 }
             })
-            window.location.href = '?name='+name+'&phone='+phone+'&page='+page+'&checknum='+checknum;
+            window.location.href = '?name={{name}}&phone={{phone}}&page='+page+'&checknum='+checknum+'&passnum='+passnum;
         }
     })
     $('#back').click(function(){

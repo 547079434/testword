@@ -1,7 +1,7 @@
 from os import path
 from django.apps import AppConfig
 
-VERBOSE_APP_NAME = "分数管理"
+VERBOSE_APP_NAME = "分数记录"
 
 
 def get_current_app_name(file):

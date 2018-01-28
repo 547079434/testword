@@ -140,6 +140,41 @@ ul{
     margin-right: 10px;
     margin-bottom: 10px;
 }
+.head_div{
+    position: absolute;
+    top: 18%;
+    left: 0;
+    width: 100%;
+    text-align: center;
+}
+.head1{
+    background: url(../images/head1.png);
+    background-size: 100% 100%;
+    width: 100px;
+    height: 32px;
+    margin: 0 auto;
+}
+.head2{
+    background: url(../images/head2.png);
+    background-size: 100% 100%;
+    width: 100px;
+    height: 32px;
+    margin: 0 auto;
+}
+.head3{
+    background: url(../images/head3.png);
+    background-size: 100% 100%;
+    width: 100px;
+    height: 32px;
+    margin: 0 auto;
+}
+.head4{
+    background: url(../images/head4.png);
+    background-size: 100% 100%;
+    width: 100px;
+    height: 32px;
+    margin: 0 auto;
+}
 .logo_div{
     position: absolute;
     top: 30%;

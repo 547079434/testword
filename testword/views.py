@@ -2,21 +2,55 @@ from django.http import HttpResponseRedirect,HttpResponse
 from django.views.generic import View,TemplateView
 from django.shortcuts import render
 from .settings import BASE_DIR
-from .models import PointsHistory
+from .models import PointsHistory,PassWords
 
-def get_words():
-    words = []
-    with open(BASE_DIR.replace('\\','/')+'/testword/medias/words.txt','r') as w:
-        words = w.read().split(',')
-        print(len(words))
-        words = [i for i in words if i]
-        print(len(words))
-    return words
+# def get_words():
+#     words = []
+#     with open(BASE_DIR.replace('\\','/')+'/testword/medias/words.txt','r') as w:
+#         words = w.read().split(',')
+#         print(len(words))
+#         words = [i for i in words if i]
+#         print(len(words))
+#     return words
 
-WORDS = get_words()
+# WORDS = get_words()
+WORDS_1 = PassWords.objects.get(num=1).content.split(',')
+WORDS_2 = PassWords.objects.get(num=2).content.split(',')
+WORDS_3 = PassWords.objects.get(num=3).content.split(',')
+WORDS_4 = PassWords.objects.get(num=4).content.split(',')
+WORDS_LIST = [WORDS_1,WORDS_2,WORDS_3,WORDS_4]
 
 class IndexView(TemplateView):
     template_name = 'index.html'
+
+    def post(self,request):
+        if 'HTTP_X_FORWARDED_FOR' in request.META:
+            ip =  request.META['HTTP_X_FORWARDED_FOR']
+        else:
+            ip = request.META['REMOTE_ADDR']
+        name = request.POST.get('name','')
+        phone = request.POST.get('phone','')
+        history = PointsHistory.objects.filter(phone=phone)
+        page = 1
+        checknum = 0
+        passnum = 1
+        points = 0
+        if not history.count():
+            PointsHistory.objects.create(name=name,phone=phone,ip=ip)
+        else:
+            content = history[0].content
+            if content:
+                data = eval(content)
+                page = data['page']
+                checknum = data['checknum']
+                passnum = data['passnum']
+                points = history[0].points
+        if points:
+            url = '/end/?name='+name+'&phone='+phone+'&checknum='+str(checknum)
+        else:
+            url = '/words/?name='+name+'&phone='+phone+'&page='+str(page)+'&checknum='+str(checknum)+'&passnum='+str(passnum)
+        return HttpResponse(url)
+
 
 class WordsView(TemplateView):
     template_name = 'words.html'
@@ -25,21 +59,29 @@ class WordsView(TemplateView):
         context = super(WordsView, self).get_context_data()
         name = self.request.GET.get('name','')
         phone = self.request.GET.get('phone','')
-        page = self.request.GET.get('page',1)
-        checknum = self.request.GET.get('checknum',0)
+        page = int(self.request.GET.get('page',1))
+        checknum = int(self.request.GET.get('checknum',0))
+        passnum = self.request.GET.get('passnum',1)
 
-        num,left = divmod(len(WORDS),10)
+        words = WORDS_LIST[int(passnum)-1]
+        num,left = divmod(len(words),10)
         if left > 0:
             num += 1
-        print(num)
-        print(page)
-        words = WORDS[(int(page)-1)*10:(int(page))*10]
+        words = words[(int(page)-1)*10:(int(page))*10]
+
+        content_dict = {'page':page,'checknum':checknum,'passnum':passnum}
+        history = PointsHistory.objects.filter(phone=phone)
+        if history.count():
+            history = history[0]
+            history.content = str(content_dict)
+            history.save()
         context.update({
             'page':page,
             'words':words,
             'checknum':int(checknum),
             'name':name,
             'phone':phone,
+            'passnum':passnum,
             'num':num
         })
         return context
@@ -49,19 +91,19 @@ class EndView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(EndView, self).get_context_data()
-        if 'HTTP_X_FORWARDED_FOR' in self.request.META:
-            ip =  self.request.META['HTTP_X_FORWARDED_FOR']
-        else:
-            ip = self.request.META['REMOTE_ADDR']
 
         name = self.request.GET.get('name','')
         phone = self.request.GET.get('phone','')
         checknum = self.request.GET.get('checknum',0)
 
         # points = '%.2f' % float(100*(int(checknum)/len(WORDS)))
-        points = int(int(checknum)/len(WORDS)*100)
-        # if name and phone:
-        #     PointsHistory.objects.create(name=name,phone=phone,points=points)
+        total = sum([len(i) for i in WORDS_LIST])
+        points = int(int(checknum)/total*100)
+        history = PointsHistory.objects.filter(phone=phone)
+        if history.count():
+            history = history[0]
+            history.points = points
+            history.save()
         context.update({
             'points':points,
         })

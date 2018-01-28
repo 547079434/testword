@@ -25,8 +25,15 @@
         var name = $('input[name="name"]').val();
         var phone = $('input[name="phone"]').val();
         if(name){
-            if(phone){
-                window.location.href = '/words/?name='+name+'&phone='+phone
+            if(phone.length>7){
+                $.ajax({
+                    url:'',
+                    type:'POST',
+                    data:{'name':name,'phone':phone},
+                    success:function(url){
+                        window.location.href = url
+                    }
+                })
             }else{
                 alert('请输入联系电话');
             }
