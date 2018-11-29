@@ -27,4 +27,5 @@ urlpatterns = [
     path('again/' , AgainView.as_view(), name='again'),
     path('static/', serve, {'document_root':STATIC_ROOT}),
     path('medias/', serve, {'document_root':MEDIAS_ROOT}),
+
 ]
