@@ -4,7 +4,7 @@ from django.db import models
 class PointsHistory(models.Model):
     name = models.CharField(verbose_name=u'姓名', max_length=50)
     phone = models.CharField(verbose_name=u'电话', max_length=50)
-    points = models.IntegerField(u'分数',blank=True,null=True)
+    points = models.IntegerField(u'字数',blank=True,null=True)
     ip = models.CharField(verbose_name=u'IP', max_length=100)
     content = models.TextField(u'每关分数',blank=True,null=True)
     create_at = models.DateTimeField(u'创建时间', auto_now_add=True)

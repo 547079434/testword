@@ -3,6 +3,7 @@ from django.views.generic import View,TemplateView
 from django.shortcuts import render
 from .settings import BASE_DIR
 from .models import PointsHistory,PassWords
+import random
 
 # def get_words():
 #     words = []
@@ -14,11 +15,13 @@ from .models import PointsHistory,PassWords
 #     return words
 
 # WORDS = get_words()
-WORDS_1 = PassWords.objects.get(num=1).content.split(',')
-WORDS_2 = PassWords.objects.get(num=2).content.split(',')
-WORDS_3 = PassWords.objects.get(num=3).content.split(',')
-WORDS_4 = PassWords.objects.get(num=4).content.split(',')
-WORDS_LIST = [WORDS_1,WORDS_2,WORDS_3,WORDS_4]
+def get_words_list():
+    WORDS_1 = random.sample(PassWords.objects.get(num=1).content.split(','),150)
+    WORDS_2 = random.sample(PassWords.objects.get(num=2).content.split(','),150)
+    WORDS_3 = random.sample(PassWords.objects.get(num=3).content.split(','),150)
+    WORDS_4 = random.sample(PassWords.objects.get(num=4).content.split(','),150)
+    WORDS_LIST = [WORDS_1,WORDS_2,WORDS_3,WORDS_4]
+    return WORDS_LIST
 
 class IndexView(TemplateView):
     template_name = 'index.html'
@@ -63,6 +66,7 @@ class WordsView(TemplateView):
         checknum = int(self.request.GET.get('checknum',0))
         passnum = self.request.GET.get('passnum',1)
 
+        WORDS_LIST = get_words_list()
         words = WORDS_LIST[int(passnum)-1]
         num,left = divmod(len(words),10)
         if left > 0:
@@ -95,10 +99,10 @@ class EndView(TemplateView):
         name = self.request.GET.get('name','')
         phone = self.request.GET.get('phone','')
         checknum = self.request.GET.get('checknum',0)
-
-        # points = '%.2f' % float(100*(int(checknum)/len(WORDS)))
-        total = sum([len(i) for i in WORDS_LIST])
-        points = int(int(checknum)/total*100)
+        # WORDS_LIST = get_words_list()
+        # total = sum([len(i) for i in WORDS_LIST])
+        # points = int(int(checknum)/total*100)
+        points = checknum
         history = PointsHistory.objects.filter(phone=phone)
         if history.count():
             history = history[0]
@@ -106,5 +110,20 @@ class EndView(TemplateView):
             history.save()
         context.update({
             'points':points,
+            'name':name,
+            'phone':phone
         })
         return context
+
+
+class AgainView(View):
+    def post(self,request):
+        phone = request.POST.get('phone','')
+        name = request.POST.get('name','')
+        history = PointsHistory.objects.filter(phone=phone)
+        if history.count():
+            history = history[0]
+            history.points = None
+            history.content = ''
+            history.save()
+        return HttpResponse('ok')

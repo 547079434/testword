@@ -24,6 +24,7 @@ urlpatterns = [
     path('' , IndexView.as_view(), name='index'),
     path('words/' , WordsView.as_view(), name='words'),
     path('end/' , EndView.as_view(), name='end'),
+    path('again/' , AgainView.as_view(), name='again'),
     path('static/', serve, {'document_root':STATIC_ROOT}),
     path('medias/', serve, {'document_root':MEDIAS_ROOT}),
 ]

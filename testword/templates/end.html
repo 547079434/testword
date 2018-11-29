@@ -6,13 +6,39 @@
     body{
         background: url('../static/images/end.jpg') no-repeat;
         background-size: 100% 100%;
-
+    }
+    .again{
+        width: 50%;
+        height: 35px;
+        background: rgb(43,162,160);
+        margin: 35px 20px 0 20px;
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        font-size: 20px;
+        border-radius: 30px;
     }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="main">
-    <span class="end_points">最终得分：{{points}}</span>
+    <span class="end_points">认识总字数：{{points}}</span>
+    <div class="center_div" style="margin-top: 90%;"><button class="again">再来一次</button></div>
+    <div class="center_div" style="margin-top: 10%;"><img src="../static/images/qrcode.png"  style="width: 40%;" /></div>
+    <div class="center_div" style="margin-top: 10%;color: #ba2323;font-weight: bold;">获识字诊断分析，可长按二维码咨询</div>
 </div>
+
+<script type="text/javascript">
+    $('.again').click(function(){
+        $.ajax({
+            url:'/again/',
+            type:'POST',
+            data:{'name':'{{name}}','phone':'{{phone}}'},
+            success:function(url){
+                window.location.href = '/words/?name={{name}}&phone={{phone}}'
+            }
+        })
+    })
+</script>
 {% endblock %}
